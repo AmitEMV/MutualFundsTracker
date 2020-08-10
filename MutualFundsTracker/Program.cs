@@ -15,6 +15,8 @@ namespace MutualFundsTracker
     {
         public static async Task Main(string[] args)
         {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("##SyncfusionLicense##");
+            
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
             builder.Services.AddSyncfusionBlazor();

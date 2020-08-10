@@ -1,7 +1,9 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('_content/Syncfusion.Blazor/styles/bootstrap4.css');
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #F0F0F7;
 }
 
 a, .btn-link {
@@ -28,7 +30,6 @@ app {
 
 .main {
     flex: 1;
-    background-color: #F0F0F7;
 }
 
     .main .top-row {
@@ -119,6 +120,17 @@ app {
     color: red;
 }
 
+.summarybox {
+    height: 130px;
+    background-color: white;
+    margin-top: 35px;
+}
+
+.e-input-group-icon.e-input-search:before {
+    content: "\ebe6";
+    font-family: e-icons;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
@@ -138,6 +150,11 @@ app {
     top: 0.5rem;
 }
 
+.responsiverow {
+    display: flex;
+    flex-direction: column;
+}
+
 @media (max-width: 767.98px) {
     .main .top-row:not(.auth) {
         display: none;
@@ -149,6 +166,9 @@ app {
 
     .main .top-row a, .main .top-row .btn-link {
         margin-left: 0;
+    }
+    .responsiverow {
+       display:flex;
     }
 }
 
@@ -181,5 +201,9 @@ app {
     .sidebar .collapse {
         /* Never collapse the sidebar for wide screens */
        display: block;
+    }
+
+    .responsiverow {
+        flex-direction: row;
     }
 }
