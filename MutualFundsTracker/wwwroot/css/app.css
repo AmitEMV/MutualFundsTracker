@@ -126,6 +126,12 @@ app {
     margin-top: 35px;
 }
 
+.fundsbox {
+    height: 350px;
+    background-color: white;
+    margin-top: 35px;
+}
+
 .e-input-group-icon.e-input-search:before {
     content: "\ebe6";
     font-family: e-icons;
