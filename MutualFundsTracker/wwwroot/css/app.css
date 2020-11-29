@@ -3,7 +3,11 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: #F0F0F7;
+}
+
+body{
+    max-width: max-content;
+    margin: auto;
 }
 
 a, .btn-link {
@@ -30,6 +34,7 @@ app {
 
 .main {
     flex: 1;
+    background: #F0F0F7
 }
 
     .main .top-row {
@@ -181,6 +186,7 @@ app {
 @media (min-width: 768px) {
     app {
         flex-direction: row;
+        min-width: 1000px;
     }
 
     .sidebar {

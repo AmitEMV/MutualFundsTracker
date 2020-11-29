@@ -1,5 +1,6 @@
 ﻿@page "/"
-@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.Buttons
+@inject FundsService fundsService
 
 <h6>Hi, Amit</h6>
 <hr />
@@ -11,9 +12,10 @@
             <span class="oi oi-magnifying-glass" style="transform: translate(-50%, 20%);"></span>
         </div>
 
-        <div class="col-sm-6 col-md-6" style="padding-left:0;padding-right:0;">
-            <div class="rounded summarybox">
-
+        <div class="col-sm-6 col-md-6" style="padding-left:0;padding-right:0;max-width: 75%;margin: auto;">
+            <div id="totalvaluediv" class="rounded summarybox" style="display: -webkit-flex; align-items: center; -webkit-box-pack: center; justify-content: center;">
+                <label> Total Account Value  @TotalValue &#8377;</label>
+                <SfButton CssClass="e-info" style="margin-left: 30px; margin-bottom: 10px">Details</SfButton>
             </div>
         </div>
 
@@ -39,4 +41,16 @@
 
 @code {
 
+    [Parameter]
+    public string TotalValue { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetTotalValueAsync();
+    }
+
+    async Task GetTotalValueAsync()
+    {
+        TotalValue = await fundsService.GetTotalValueAsync();
+    }
 }
