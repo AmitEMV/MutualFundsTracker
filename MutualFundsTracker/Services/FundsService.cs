@@ -2,7 +2,6 @@
 using MutualFundsTracker.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -21,8 +20,30 @@ namespace MutualFundsTracker.Services
 
         public async Task<string> GetTotalValueAsync()
         {
-            var response = await httpClient.GetAsync(new Uri($"{apiURL}/api/home/GetTotalValue"));
-            string totalValue = await response.Content.ReadAsStringAsync();
+            string totalValue;
+
+            try
+            {
+                var response = await httpClient.GetAsync(new Uri($"{apiURL}/api/home/TotalValue"));
+                if (response.IsSuccessStatusCode)
+                {
+                    totalValue = await response.Content.ReadAsStringAsync();
+                }
+                else 
+                {
+                    throw new CustomException(response.Content.ReadAsStringAsync().Result);
+                }
+
+            }
+            catch(CustomException)
+            {
+                throw;
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+
             return totalValue;
         }
 
@@ -30,11 +51,7 @@ namespace MutualFundsTracker.Services
         {
             try
             {
-                UriBuilder uriBuilder = new UriBuilder($"{apiURL}/api/home/GetValueTrend")
-                {
-                    Query = "numOfMonths=12"
-                };
-                var response = await httpClient.GetAsync(uriBuilder.Uri);
+                var response = await httpClient.GetAsync(new Uri($"{apiURL}/api/home/ValueTrend/12"));
                 var content = await response.Content.ReadAsStringAsync();
                 JsonSerializerOptions options = new JsonSerializerOptions()
                 {
@@ -44,6 +61,10 @@ namespace MutualFundsTracker.Services
                 options.Converters.Add(new DateTimeParser());
                 var result = JsonSerializer.Deserialize<ValueTrend[]>(content, options);
                 return result;
+            }
+            catch (CustomException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -66,6 +87,10 @@ namespace MutualFundsTracker.Services
                 };
                 var result = JsonSerializer.Deserialize<List<FundPerformance>>(content, options);
                 return result;
+            }
+            catch (CustomException)
+            {
+                throw;
             }
             catch (Exception ex)
             {

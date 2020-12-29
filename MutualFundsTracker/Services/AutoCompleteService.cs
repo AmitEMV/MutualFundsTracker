@@ -31,9 +31,9 @@ namespace MutualFundsTracker.Services
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);   
+                throw;
             }
 
             return autoCompleteList;

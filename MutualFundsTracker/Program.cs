@@ -27,6 +27,8 @@ namespace MutualFundsTracker
                 return new AutoCompleteService(AUTOCOMPLETE_API_URL);
             });
 
+            builder.Services.AddScoped<Radzen.NotificationService>();
+
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             await builder.Build().RunAsync();

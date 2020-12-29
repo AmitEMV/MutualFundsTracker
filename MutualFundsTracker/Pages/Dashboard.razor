@@ -1,14 +1,15 @@
 ﻿@page "/"
 @using MutualFundsTracker.Models
 @using System.Globalization
+@using MutualFundsTracker.Helpers 
 @inject NavigationManager navigationManager
 @inject FundsService fundsService
 @inject AutoCompleteService autoCompleteService
-
+@inject NotificationService notificationService
 
 <h6>Hi, Amit</h6>
 <hr style="margin-top:0;" />
-
+<RadzenNotification/>
 <div class="row" style="justify-content:center;padding-left:10%;padding-right:10%;padding-bottom: 5%;margin:auto">
     <div class="col">
         <div class="e-input-group">
@@ -64,7 +65,7 @@
         <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
             <label style="margin-left: auto; margin-right: auto; margin-top: 10px; text-decoration: underline; font-size: 14px;">Top losers for the last 12 months</label>
         </div>
-        <br/>
+        <br />
         <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
             <div class="col" style="padding:0; width: 100%; height: auto;">
                 <RadzenGrid @ref="losersFundsGrid" AllowFiltering="false" AllowPaging="false" AllowSorting="true" Data="@LosersFundsData"
@@ -103,33 +104,110 @@
 
     async Task GetTotalValueAsync()
     {
-        TotalValue = await fundsService.GetTotalValueAsync();
+        try
+        {
+            TotalValue = await fundsService.GetTotalValueAsync();
+        }
+        catch (CustomException ex)
+        {
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "That didn't work :(", Detail = ex.Message, Duration = 3000 });
+        }
+        catch (Exception)
+        {
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Oops!", Detail = "App is lil unhappy, try refreshing the page once?", Duration = 3000 });
+        }
     }
 
     async Task GetTotalValueTrendAsync()
     {
-        PortfolioValueTrend = await fundsService.GetTotalValueTrendAsync();
-        areaChart.Reload();
+        try
+        {
+            PortfolioValueTrend = await fundsService.GetTotalValueTrendAsync();
+
+            if (PortfolioValueTrend == null)
+            {
+                ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "That didn't work :(", Detail = "Couldn't get value trend, please try again", Duration = 5000 });
+            }
+            else
+            {
+                areaChart.Reload();
+            }
+        }
+        catch (CustomException ex)
+        {
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "That didn't work :(", Detail = ex.Message, Duration = 5000 });
+        }
+        catch (Exception)
+        {
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Oops!", Detail = "App is lil unhappy, try refreshing the page once?", Duration = 5000 });
+        }
     }
 
     async Task GetMutualFundSuggestionsAsync()
     {
-        List<string> fundsList = await autoCompleteService.GetSuggestions();
-        foreach (string fund in fundsList)
+        try
         {
-            FundNamesSuggestion.Add(new AutoCompleteSuggestion()
+            List<string> fundsList = await autoCompleteService.GetSuggestions();
+
+            if (fundsList == null || fundsList.Count == 0)
             {
-                FundName = fund
-            });
+                Console.WriteLine("Couldn't fetch auto complete suggestion list");
+            }
+            else
+            {
+                foreach (string fund in fundsList)
+                {
+                    FundNamesSuggestion.Add(new AutoCompleteSuggestion()
+                    {
+                        FundName = fund
+                    });
+                }
+            }
+        }
+        catch (CustomException ex)
+        {
+            Console.WriteLine($"Couldn't fetch auto complete suggestion list - {ex.Message}");
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Couldn't fetch auto complete suggestion list - {ex.Message}");
         }
     }
 
     async Task GetFundsPerformanceAsync()
     {
-        GainersFundsData = await fundsService.GetFundPerformanceAsync("GetTopGainers");
-        LosersFundsData = await fundsService.GetFundPerformanceAsync("GetTopLosers");
-        await gainersFundsGrid.Reload();
-        await losersFundsGrid.Reload();
+        try
+        {
+            GainersFundsData = await fundsService.GetFundPerformanceAsync("TopGainers");
+
+            if (PortfolioValueTrend == null)
+            {
+                ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "That didn't work :(", Detail = "Couldn't get top gainers details, please try again", Duration = 5000 });
+            }
+            else
+            {
+                await gainersFundsGrid.Reload();
+            }
+
+            LosersFundsData = await fundsService.GetFundPerformanceAsync("TopLosers");
+            if (PortfolioValueTrend == null)
+            {
+                ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "That didn't work :(", Detail = "Couldn't get top losers details, please try again", Duration = 5000 });
+            }
+            else
+            {
+                await losersFundsGrid.Reload();
+            }
+        }
+        catch (CustomException ex)
+        {
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "That didn't work :(", Detail = ex.Message, Duration = 5000 });
+        }
+        catch (Exception)
+        {
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Oops!", Detail = "App is lil unhappy, try refreshing the page once?", Duration = 5000 });
+        }
     }
 
     string FormatAsINR(object value)
@@ -140,6 +218,11 @@
     void NavigateToPortfolioPage()
     {
         navigationManager.NavigateTo("/portfolio");
+    }
+
+    void ShowNotification(NotificationMessage message)
+    {
+        notificationService.Notify(message);
     }
 
 }
