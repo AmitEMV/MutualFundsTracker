@@ -24,12 +24,4 @@
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="cd &quot;$(ProjectDir)&quot; &#xD;&#xA;SyncfusionLicenseRegister.bat PostBuild C:\Users\sourc\Source\Repos\MutualFundsTracker\MutualFundsTracker\Program.cs" />
-  </Target>
-
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="cd &quot;$(ProjectDir)&quot; &#xD;&#xA;SyncfusionLicenseRegister.bat PreBuild C:\Users\sourc\Source\Repos\MutualFundsTracker\MutualFundsTracker\Program.cs" />
-  </Target>
-
 </Project>
