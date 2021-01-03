@@ -1,24 +1,169 @@
 ﻿@page "/portfolio"
+@using MutualFundsTracker.Models
+@using System.Globalization
+@using MutualFundsTracker.Helpers
+@inject NavigationManager navigationManager
+@inject PortfolioService portfolioService
+@inject NotificationService notificationService
 
-    <div class="row" style="justify-content:center;padding-left:10%;padding-right:10%;">
-        <div class="col">
-            <div class="row responsiverow d-flex justify-content-between">
-                <div class="col-sm-5 col-md-5">
-                    <div class="rounded summarybox">
+<RadzenNotification />
+<div class="row" style="justify-content:center;padding-left:10%;padding-right:10%;padding-bottom: 5%;margin:auto">
+    <div class="col">
 
-                    </div>
-                </div>
-                <div class="col-sm-5 col-md-5">
-                    <div class="rounded summarybox">
-
-                    </div>
-                </div>
+        <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
+            <div id="totalvaluediv" class="rounded summarybox" style="display: -webkit-flex; align-items: center; -webkit-box-pack: center; justify-content: center;width:100%">
+                <label style="margin-top:10px;font-size: 14px;">Amount invested is <strong>@string.Format(CultureInfo.CreateSpecificCulture("en-IN"), "{0:c0}", InvestedValue)</strong> and the current value is <strong>@string.Format(CultureInfo.CreateSpecificCulture("en-IN"), "{0:c0}", CurrentValue)</strong>, which is a <strong>@GainPercentage %</strong> change.</label>
             </div>
-
-
-            <div class="rounded fundsbox">
-
-            </div>
-
         </div>
+
+        <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
+            <label style="margin-left: auto; margin-right: auto; margin-top:20px; text-decoration: underline; font-size: 14px;">Investment Distribution</label>
+        </div>
+        <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
+            <div class="col" style="padding:0; width: 100%; height: auto;">
+                <RadzenChart @ref="pieChart">
+                    <RadzenPieSeries Data="@FundsDistribution" CategoryProperty="FundType" ValueProperty="FundValue">
+                        <TooltipTemplate Context="data">
+                            <div>
+                                <span>@data.FundType</span> is <strong>@data.FundValue</strong> % of your investment
+                            </div>
+                        </TooltipTemplate>
+                    </RadzenPieSeries>
+                </RadzenChart>
+            </div>
+        </div>
+
+        <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
+            <label style="margin-left: auto; margin-right: auto; margin-top: 10px; margin-bottom: 10px;
+                   text-decoration: underline; font-size: 14px;">Portfolio Snapshot</label>
+        </div>
+        <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
+            <div class="col" style="padding:0; width: 100%; height: auto;">
+                <RadzenGrid @ref="portfolioGrid" AllowFiltering="false" AllowPaging="false" AllowSorting="true" Data="@Snapshot"
+                            TItem="PortfolioSnapshot" Responsive="false" Style="font-size: 14px;width:inherit" CellRender="@CellRender">
+                    <Columns>
+                        <RadzenGridColumn TItem="PortfolioSnapshot" Property="FundName" Title="Fund Name" TextAlign="Radzen.TextAlign.Center" >
+                            <Template Context="data">
+                                <p style="white-space:pre-wrap;">@data.FundName</p>
+                            </Template>
+                        </RadzenGridColumn>
+                        <RadzenGridColumn TextAlign="Radzen.TextAlign.Center" TItem="PortfolioSnapshot" Property="InvestmentValue" Title="Invested Amount">
+                            <HeaderTemplate>
+                                <span style="white-space: pre-wrap;">Invested Amount</span>
+                            </HeaderTemplate>
+                            <Template Context="data">
+                                @data.InvestmentValue.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("en-IN"))
+                            </Template>
+                        </RadzenGridColumn>
+                        <RadzenGridColumn TextAlign="Radzen.TextAlign.Center" TItem="PortfolioSnapshot" Property="CurrentValue" Title="Current Value" >
+                            <HeaderTemplate>
+                                <span style="white-space: pre-wrap;">Current Value</span>
+                            </HeaderTemplate>
+                            <Template Context="data">
+                                @data.CurrentValue.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("en-IN"))
+                            </Template>
+                        </RadzenGridColumn>
+                        <RadzenGridColumn TextAlign="Radzen.TextAlign.Center" TItem="PortfolioSnapshot" Property="Return" Title="Absolute Return">
+                            <HeaderTemplate>
+                                <span style="white-space: pre-wrap;">Absolute Return</span>
+                            </HeaderTemplate>
+                            <Template Context="data">
+                                @String.Format("{0} %", data.Return)
+                            </Template>
+                        </RadzenGridColumn>
+                    </Columns>
+                </RadzenGrid>
+            </div>
+        </div>
+
     </div>
+</div>
+
+@code {
+    double InvestedValue { get; set; }
+    double CurrentValue { get; set; }
+    double GainPercentage { get; set; }
+    FundDistribution[] FundsDistribution;
+    List<PortfolioSnapshot> Snapshot = new List<PortfolioSnapshot>();
+    RadzenChart pieChart;
+    RadzenGrid<PortfolioSnapshot> portfolioGrid;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetFundDistributionAsync();
+        await GetPortfolioSnapshotAsync();
+        await GetInvestmentValueAsync();
+    }
+
+    async Task GetInvestmentValueAsync()
+    {
+        try
+        {
+            InvestmentStatus investmentStatus = await portfolioService.GetInvestmentReturnsValueAsync();
+            InvestedValue = investmentStatus.InvestmentValue;
+            CurrentValue = investmentStatus.CurrentValue;
+            GainPercentage = System.Math.Round(((CurrentValue - InvestedValue) / InvestedValue) * 100);
+        }
+        catch (CustomException ex)
+        {
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "That didn't work :(", Detail = ex.Message, Duration = 3000 });
+        }
+        catch (Exception)
+        {
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Oops!", Detail = "App is lil unhappy, try refreshing the page once?", Duration = 3000 });
+        }
+    }
+
+    async Task GetPortfolioSnapshotAsync()
+    {
+        try
+        {
+            Snapshot = await portfolioService.GetPortfolioSnapshotAsync();
+
+            if (Snapshot == null)
+            {
+                ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "That didn't work :(", Detail = "Couldn't get top gainers details, please try again", Duration = 5000 });
+            }
+            else
+            {
+                await portfolioGrid.Reload();
+            }
+        }
+        catch (CustomException ex)
+        {
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "That didn't work :(", Detail = ex.Message, Duration = 5000 });
+        }
+        catch (Exception)
+        {
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Oops!", Detail = "App is lil unhappy, try refreshing the page once?", Duration = 5000 });
+        }
+    }
+
+    async Task GetFundDistributionAsync()
+    {
+        try
+        {
+            FundsDistribution = await portfolioService.GetFundDistributionAsync();
+            pieChart.Reload();
+        }
+        catch (CustomException ex)
+        {
+            Console.WriteLine($"Couldn't fetch auto complete suggestion list - {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Couldn't fetch auto complete suggestion list - {ex.Message}");
+        }
+    }
+
+    void ShowNotification(NotificationMessage message)
+    {
+        notificationService.Notify(message);
+    }
+
+    void CellRender(CellRenderEventArgs<PortfolioSnapshot> args)
+    {
+        args.Attributes.Add("style", @"background-color:white;text-align:center");
+    }
+
+}

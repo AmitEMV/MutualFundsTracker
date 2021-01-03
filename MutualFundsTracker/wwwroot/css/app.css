@@ -235,4 +235,12 @@ app {
     .responsiverow {
         flex-direction: row;
     }
+
+    .rz-legend-right {
+        right: auto !important;
+    }
+
+    .rz-legend {
+        padding-left: 45px !important;
+    }
 }

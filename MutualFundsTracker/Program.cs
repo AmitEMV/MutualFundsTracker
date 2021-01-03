@@ -14,12 +14,19 @@ namespace MutualFundsTracker
 
         public static async Task Main(string[] args)
         {
+            await Task.Delay(2000);
+
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
             
             builder.Services.AddScoped<FundsService>(s =>
             {
                 return new FundsService(API_URL);
+            });
+
+            builder.Services.AddScoped<PortfolioService>(s =>
+            {
+                return new PortfolioService(API_URL);
             });
 
             builder.Services.AddScoped<AutoCompleteService>(s =>

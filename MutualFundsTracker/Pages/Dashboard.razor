@@ -18,7 +18,7 @@
 
         <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
             <div id="totalvaluediv" class="rounded summarybox" style="display: -webkit-flex; align-items: center; -webkit-box-pack: center; justify-content: center;width:100%">
-                <label style="margin-top:10px;font-size: 14px;">Total account value is &#8377; @TotalValue</label>
+                <label style="margin-top:10px;font-size: 14px;">Total account value is <strong>@string.Format(CultureInfo.CreateSpecificCulture("en-IN"),"{0:c0}", TotalValue)</strong></label>
                 <RadzenButton Text="Details" ButtonStyle="ButtonStyle.Info" Click="NavigateToPortfolioPage"
                               Style="margin-left: 20px;background: #0479cc; margin-top: 5px;" />
             </div>
@@ -34,7 +34,9 @@
                 <RadzenChart @ref="areaChart" Style="width: 100%; padding: 0px; margin: 0px;">
                     <RadzenAreaSeries Smooth=true Data="@PortfolioValueTrend" CategoryProperty="Date" ValueProperty="Amount"
                                       Fill="#0479cc !important" Title="Value" StrokeWidth="0" />
-                    <RadzenCategoryAxis FormatString="{0:dd/MM}" />
+                    <RadzenCategoryAxis FormatString="{0:dd/MM}">
+                        <RadzenGridLines Visible="true" />
+                    </RadzenCategoryAxis>
                     <RadzenValueAxis Formatter="@FormatAsINR">
                         <RadzenGridLines Visible="true" />
                     </RadzenValueAxis>
@@ -51,11 +53,14 @@
         <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
             <div class="col" style="padding:0; width:100%;height: auto;">
                 <RadzenGrid @ref="gainersFundsGrid" AllowFiltering="false" AllowPaging="false" AllowSorting="true" Data="@GainersFundsData"
-                            TItem="FundPerformance" Responsive="false" Style="font-size: 14px;width:inherit">
+                            TItem="FundPerformance" Responsive="false" Style="font-size: 14px;width:inherit" CellRender="@CellRender">
                     <Columns>
-                        <RadzenGridColumn TItem="FundPerformance" Property="FundName" Title="Fund Name"
-                                          TextAlign="Radzen.TextAlign.Center" Sortable="false" />
-                        <RadzenGridColumn TItem="FundPerformance" Property="Return" Title="Absolute Returns (%)" TextAlign="Radzen.TextAlign.Center" />
+                        <RadzenGridColumn TextAlign="Radzen.TextAlign.Center" TItem="FundPerformance" Property="FundName" Title="Fund Name"/>
+                        <RadzenGridColumn TextAlign="Radzen.TextAlign.Center" TItem="FundPerformance" Property="Return" Title="Absolute Return">
+                            <Template Context="data">
+                                @String.Format("{0} %", data.Return)
+                            </Template>
+                        </RadzenGridColumn>
                     </Columns>
                 </RadzenGrid>
             </div>
@@ -69,11 +74,14 @@
         <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
             <div class="col" style="padding:0; width: 100%; height: auto;">
                 <RadzenGrid @ref="losersFundsGrid" AllowFiltering="false" AllowPaging="false" AllowSorting="true" Data="@LosersFundsData"
-                            TItem="FundPerformance" Responsive="false" Style="font-size: 14px;width:inherit">
+                            TItem="FundPerformance" Responsive="false" Style="font-size: 14px;width:inherit" CellRender="@CellRender">
                     <Columns>
-                        <RadzenGridColumn TItem="FundPerformance" Property="FundName" Title="Fund Name"
-                                          TextAlign="Radzen.TextAlign.Center" Sortable="false" />
-                        <RadzenGridColumn TItem="FundPerformance" Property="Return" Title="Absolute Returns (%)" TextAlign="Radzen.TextAlign.Center" />
+                        <RadzenGridColumn TextAlign="Radzen.TextAlign.Center" TItem="FundPerformance" Property="FundName" Title="Fund Name" />
+                        <RadzenGridColumn TextAlign="Radzen.TextAlign.Center" TItem="FundPerformance" Property="Return" Title="Absolute Return">
+                            <Template Context="data">
+                                @String.Format("{0} %", data.Return)
+                            </Template>
+                        </RadzenGridColumn>
                     </Columns>
                 </RadzenGrid>
             </div>
@@ -84,7 +92,7 @@
 
 @code {
 
-    string TotalValue { get; set; }
+    double TotalValue { get; set; }
     List<AutoCompleteSuggestion> FundNamesSuggestion = new List<AutoCompleteSuggestion>();
     string SelectedFund { get; set; }
     ValueTrend[] PortfolioValueTrend;
@@ -96,7 +104,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await GetMutualFundSuggestionsAsync();
+        // await GetMutualFundSuggestionsAsync();
         await GetTotalValueAsync();
         await GetTotalValueTrendAsync();
         await GetFundsPerformanceAsync();
@@ -179,7 +187,7 @@
     {
         try
         {
-            GainersFundsData = await fundsService.GetFundPerformanceAsync("TopGainers");
+            GainersFundsData = await fundsService.GetFundPerformanceAsync("topgainers");
 
             if (PortfolioValueTrend == null)
             {
@@ -190,7 +198,7 @@
                 await gainersFundsGrid.Reload();
             }
 
-            LosersFundsData = await fundsService.GetFundPerformanceAsync("TopLosers");
+            LosersFundsData = await fundsService.GetFundPerformanceAsync("toplosers");
             if (PortfolioValueTrend == null)
             {
                 ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "That didn't work :(", Detail = "Couldn't get top losers details, please try again", Duration = 5000 });
@@ -223,6 +231,11 @@
     void ShowNotification(NotificationMessage message)
     {
         notificationService.Notify(message);
+    }
+
+    void CellRender(CellRenderEventArgs<FundPerformance> args)
+    {
+        args.Attributes.Add("style", @"background-color:white;text-align:center");
     }
 
 }
