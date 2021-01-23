@@ -9,15 +9,14 @@
 <RadzenNotification />
 <div class="row" style="justify-content:center;padding-left:10%;padding-right:10%;padding-bottom: 5%;margin:auto">
     <div class="col">
-
         <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
             <div id="totalvaluediv" class="rounded summarybox" style="display: -webkit-flex; align-items: center; -webkit-box-pack: center; justify-content: center;width:100%">
-                <label style="margin-top:10px;font-size: 14px;">Amount invested is <strong>@string.Format(CultureInfo.CreateSpecificCulture("en-IN"), "{0:c0}", InvestedValue)</strong> and the current value is <strong>@string.Format(CultureInfo.CreateSpecificCulture("en-IN"), "{0:c0}", CurrentValue)</strong> which is a <strong>@GainPercentage %</strong> change.</label>
+                <label style="margin-top:10px;font-size: 14px;">Amount invested is <strong>@string.Format(CultureInfo.CreateSpecificCulture("en-IN"), "{0:c0}", InvestedValue)</strong> and the current value is <strong>@string.Format(CultureInfo.CreateSpecificCulture("en-IN"), "{0:c0}", CurrentValue)</strong> which is a <strong>@GainPercentage%</strong> change.</label>
             </div>
         </div>
 
-        <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
-            <label style="margin-left: auto; margin-right: auto; margin-top:20px; text-decoration: underline; font-size: 14px;">Investment Distribution</label>
+        <div class="row" style="margin-left:0px;">
+            <label style="margin-top:20px;font-size:17px;">Investment Distribution</label>
         </div>
         <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
             <div class="col" style="padding:0; width: 100%; height: auto;">
@@ -33,9 +32,8 @@
             </div>
         </div>
 
-        <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
-            <label style="margin-left: auto; margin-right: auto; margin-top: 10px; margin-bottom: 10px;
-                   text-decoration: underline; font-size: 14px;">Portfolio Snapshot</label>
+        <div class="row" style="margin-left:0px;">
+            <label style="margin-top: 10px; margin-bottom: 10px;font-size:17px;">Portfolio Snapshot</label>
         </div>
         <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
             <div class="col" style="padding:0; width: 100%; height: auto;">
@@ -68,14 +66,13 @@
                                 <span style="white-space: pre-wrap;">Absolute Return</span>
                             </HeaderTemplate>
                             <Template Context="data">
-                                @String.Format("{0} %", data.Return)
+                                @String.Format("{0}%", data.Return)
                             </Template>
                         </RadzenGridColumn>
                     </Columns>
                 </RadzenGrid>
             </div>
         </div>
-
     </div>
 </div>
 

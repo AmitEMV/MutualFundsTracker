@@ -20,7 +20,7 @@ namespace MutualFundsTracker.Services
 
         public async Task<double> GetTotalValueAsync()
         {
-            double totalValue = 0;
+            double totalValue;
 
             try
             {
@@ -87,6 +87,32 @@ namespace MutualFundsTracker.Services
                     PropertyNameCaseInsensitive = true
                 };
                 var result = JsonSerializer.Deserialize<List<FundPerformance>>(content, options);
+                return result;
+            }
+            catch (CustomException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return null;
+        }
+
+        public async Task<List<Funds>> GetFundsListAsync()
+        {
+            try
+            {
+                var response = await httpClient.GetAsync(new Uri($"{apiURL}/api/home/funds"));
+                var content = await response.Content.ReadAsStringAsync();
+                JsonSerializerOptions options = new JsonSerializerOptions()
+                {
+                    IgnoreNullValues = true,
+                    PropertyNameCaseInsensitive = true
+                };
+                var result = JsonSerializer.Deserialize<List<Funds>>(content, options);
                 return result;
             }
             catch (CustomException)

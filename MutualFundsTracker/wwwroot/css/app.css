@@ -166,9 +166,15 @@ app {
     flex-direction: column;
 }
 
+.ui-fieldset-legend {
+    visibility: collapse !important;
+}
+
+.ui-fieldset{
+  border: none !important;
+}
 
 @media (max-width: 767.98px) {
-
     html {
         overflow-x: hidden !important;
     }
@@ -242,5 +248,9 @@ app {
 
     .rz-legend {
         padding-left: 45px !important;
+    }
+
+    .handcursor{
+        cursor:pointer;
     }
 }

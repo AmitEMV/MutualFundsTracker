@@ -14,7 +14,7 @@ namespace MutualFundsTracker
 
         public static async Task Main(string[] args)
         {
-            await Task.Delay(2000);
+            // await Task.Delay(2000);
 
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");

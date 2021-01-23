@@ -5,8 +5,11 @@ namespace MutualFundsTracker.Models
 {
     public class ValueTrend
     {
-        [JsonPropertyName("amount")]
-        public double Amount { get; set; }
+        [JsonPropertyName("currentvalue")]
+        public double CurrentValue { get; set; }
+
+        [JsonPropertyName("investedvalue")]
+        public double InvestedValue { get; set; }
 
         [JsonPropertyName("date")]
         public DateTime Date { get; set; }

@@ -97,5 +97,80 @@ namespace MutualFundsTracker.Services
 
             return default;
         }
+
+        public async Task<bool> RemoveFundFromFolio(PortfolioSnapshot portfolioSnapshot)
+        {
+            var result = false;
+
+            try
+            {
+                var requestMessage = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Delete,
+                    RequestUri = new Uri($"{apiURL}/api/portfolio/deletefund"),
+                    Content = new StringContent(JsonSerializer.Serialize(portfolioSnapshot), System.Text.Encoding.UTF8, "application/json")
+                };
+
+                var response = await httpClient.SendAsync(requestMessage);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    JsonSerializerOptions options = new JsonSerializerOptions()
+                    {
+                        IgnoreNullValues = true,
+                        PropertyNameCaseInsensitive = true
+                    };
+                    result = JsonSerializer.Deserialize<bool>(content, options);
+                }
+                else
+                {
+                    throw new CustomException(response.Content.ReadAsStringAsync().Result);
+                }
+            }
+            catch (CustomException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return result;
+        }
+
+        public async Task<bool> AddFundToFolio(FundInfo fundInfo)
+        {
+            var result = false;
+
+            try
+            {
+                var response = await httpClient.PostAsync(new Uri($"{apiURL}/api/portfolio/addfund"), new StringContent(JsonSerializer.Serialize(fundInfo), System.Text.Encoding.UTF8, "application/json"));
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    JsonSerializerOptions options = new JsonSerializerOptions()
+                    {
+                        IgnoreNullValues = true,
+                        PropertyNameCaseInsensitive = true
+                    };
+                    result = JsonSerializer.Deserialize<bool>(content, options);
+                }
+                else
+                {
+                    throw new CustomException(response.Content.ReadAsStringAsync().Result);
+                }
+            }
+            catch (CustomException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return result;
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿@page "/"
 @using MutualFundsTracker.Models
 @using System.Globalization
-@using MutualFundsTracker.Helpers 
+@using MutualFundsTracker.Helpers
 @inject NavigationManager navigationManager
 @inject FundsService fundsService
 @inject AutoCompleteService autoCompleteService
@@ -9,45 +9,44 @@
 
 <h6>Hi, Amit</h6>
 <hr style="margin-top:0;" />
-<RadzenNotification/>
+<RadzenNotification />
 <div class="row" style="justify-content:center;padding-left:10%;padding-right:10%;padding-bottom: 5%;margin:auto">
     <div class="col">
-        <div class="e-input-group">
-            <RadzenAutoComplete Data=@FundNamesSuggestion TextProperty="FundName" Placeholder="Search Mutual Funds ..." FilterOperator="StringFilterOperator.StartsWith" Style="width: 100%; font-size: 14px;" />
-        </div>
-
         <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
             <div id="totalvaluediv" class="rounded summarybox" style="display: -webkit-flex; align-items: center; -webkit-box-pack: center; justify-content: center;width:100%">
-                <label style="margin-top:10px;font-size: 14px;">Total account value is <strong>@string.Format(CultureInfo.CreateSpecificCulture("en-IN"),"{0:c0}", TotalValue)</strong></label>
+                <label style="margin-top:10px;font-size: 14px;">Total account value is <strong>@string.Format(CultureInfo.CreateSpecificCulture("en-IN"), "{0:c0}", TotalValue)</strong></label>
                 <RadzenButton Text="Details" ButtonStyle="ButtonStyle.Info" Click="NavigateToPortfolioPage"
                               Style="margin-left: 20px;background: #0479cc; margin-top: 5px;" />
             </div>
         </div>
         <br />
 
-        <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
-            <label style="margin-left: auto; margin-right: auto; margin-top: 10px; text-decoration: underline; font-size: 14px;">Account value trend for the last 12 months</label>
+        <div class="row" style="margin-left:0px;">
+            <label style="margin-top: 10px; font-size: 17px;">Account value trend for the last 12 months</label>
         </div>
         <br />
         <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
             <div class="col rounded" style="font-size: 12px; width:100%;height: auto;background-color: white;">
                 <RadzenChart @ref="areaChart" Style="width: 100%; padding: 0px; margin: 0px;">
-                    <RadzenAreaSeries Smooth=true Data="@PortfolioValueTrend" CategoryProperty="Date" ValueProperty="Amount"
-                                      Fill="#0479cc !important" Title="Value" StrokeWidth="0" />
-                    <RadzenCategoryAxis FormatString="{0:dd/MM}">
+                    <RadzenAreaSeries Smooth=true Data="@PortfolioValueTrend" CategoryProperty="Date" ValueProperty="CurrentValue"
+                                      Fill="#0479cc !important" Title="Current Value" StrokeWidth="0" />
+                    <RadzenAreaSeries Smooth=true Data="@PortfolioValueTrend" CategoryProperty="Date" Title="Invested Amount"
+                                      LineType="LineType.Dashed" ValueProperty="InvestedValue">
+                    </RadzenAreaSeries>
+                    <RadzenCategoryAxis FormatString="{0:dd/MMM}" >
                         <RadzenGridLines Visible="true" />
                     </RadzenCategoryAxis>
                     <RadzenValueAxis Formatter="@FormatAsINR">
                         <RadzenGridLines Visible="true" />
                     </RadzenValueAxis>
-                    <RadzenLegend Visible="false" />
+                    <RadzenLegend Visible="true" Position="Radzen.Blazor.LegendPosition.Bottom" />
                 </RadzenChart>
             </div>
         </div>
         <br />
 
-        <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
-            <label style="margin-left: auto; margin-right: auto; margin-top: 10px; text-decoration: underline; font-size: 14px;">Top gainers for the last 12 months</label>
+        <div class="row" style="margin-left:0px;">
+            <label style="margin-top: 10px;font-size: 17px;">Top gainers for the last 12 months</label>
         </div>
         <br />
         <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
@@ -55,10 +54,10 @@
                 <RadzenGrid @ref="gainersFundsGrid" AllowFiltering="false" AllowPaging="false" AllowSorting="true" Data="@GainersFundsData"
                             TItem="FundPerformance" Responsive="false" Style="font-size: 14px;width:inherit" CellRender="@CellRender">
                     <Columns>
-                        <RadzenGridColumn TextAlign="Radzen.TextAlign.Center" TItem="FundPerformance" Property="FundName" Title="Fund Name"/>
+                        <RadzenGridColumn TextAlign="Radzen.TextAlign.Center" TItem="FundPerformance" Property="FundName" Title="Fund Name" />
                         <RadzenGridColumn TextAlign="Radzen.TextAlign.Center" TItem="FundPerformance" Property="Return" Title="Absolute Return">
                             <Template Context="data">
-                                @String.Format("{0} %", data.Return)
+                                @String.Format("{0}%", data.Return)
                             </Template>
                         </RadzenGridColumn>
                     </Columns>
@@ -67,8 +66,8 @@
         </div>
         <br />
 
-        <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
-            <label style="margin-left: auto; margin-right: auto; margin-top: 10px; text-decoration: underline; font-size: 14px;">Top losers for the last 12 months</label>
+        <div class="row" style="margin-left:0px;">
+            <label style="margin-top: 10px;font-size: 17px;">Top losers for the last 12 months</label>
         </div>
         <br />
         <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
@@ -79,7 +78,7 @@
                         <RadzenGridColumn TextAlign="Radzen.TextAlign.Center" TItem="FundPerformance" Property="FundName" Title="Fund Name" />
                         <RadzenGridColumn TextAlign="Radzen.TextAlign.Center" TItem="FundPerformance" Property="Return" Title="Absolute Return">
                             <Template Context="data">
-                                @String.Format("{0} %", data.Return)
+                                @String.Format("{0}%", data.Return)
                             </Template>
                         </RadzenGridColumn>
                     </Columns>
@@ -93,8 +92,9 @@
 @code {
 
     double TotalValue { get; set; }
-    List<AutoCompleteSuggestion> FundNamesSuggestion = new List<AutoCompleteSuggestion>();
     string SelectedFund { get; set; }
+    double MinValue { get; set; }
+    double Step { get; set; }
     ValueTrend[] PortfolioValueTrend;
     RadzenChart areaChart;
     RadzenGrid<FundPerformance> gainersFundsGrid;
@@ -104,10 +104,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // await GetMutualFundSuggestionsAsync();
+        await GetFundsPerformanceAsync();
         await GetTotalValueAsync();
         await GetTotalValueTrendAsync();
-        await GetFundsPerformanceAsync();
     }
 
     async Task GetTotalValueAsync()
@@ -138,6 +137,8 @@
             }
             else
             {
+                MinValue = PortfolioValueTrend[0].InvestedValue - (PortfolioValueTrend[0].InvestedValue * .1);
+                Step = 2 * MinValue; // Not using this right now, leading to errors in rendering due to not having a default value
                 areaChart.Reload();
             }
         }
@@ -151,45 +152,13 @@
         }
     }
 
-    async Task GetMutualFundSuggestionsAsync()
-    {
-        try
-        {
-            List<string> fundsList = await autoCompleteService.GetSuggestions();
-
-            if (fundsList == null || fundsList.Count == 0)
-            {
-                Console.WriteLine("Couldn't fetch auto complete suggestion list");
-            }
-            else
-            {
-                foreach (string fund in fundsList)
-                {
-                    FundNamesSuggestion.Add(new AutoCompleteSuggestion()
-                    {
-                        FundName = fund
-                    });
-                }
-            }
-        }
-        catch (CustomException ex)
-        {
-            Console.WriteLine($"Couldn't fetch auto complete suggestion list - {ex.Message}");
-
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Couldn't fetch auto complete suggestion list - {ex.Message}");
-        }
-    }
-
     async Task GetFundsPerformanceAsync()
     {
         try
         {
             GainersFundsData = await fundsService.GetFundPerformanceAsync("topgainers");
 
-            if (PortfolioValueTrend == null)
+            if (GainersFundsData == null)
             {
                 ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "That didn't work :(", Detail = "Couldn't get top gainers details, please try again", Duration = 5000 });
             }
@@ -199,7 +168,7 @@
             }
 
             LosersFundsData = await fundsService.GetFundPerformanceAsync("toplosers");
-            if (PortfolioValueTrend == null)
+            if (LosersFundsData == null)
             {
                 ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "That didn't work :(", Detail = "Couldn't get top losers details, please try again", Duration = 5000 });
             }

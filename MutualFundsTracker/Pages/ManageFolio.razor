@@ -1,0 +1,299 @@
+﻿@page "/managefolio"
+@using MutualFundsTracker.Models
+@using MutualFundsTracker.Helpers
+@inject NavigationManager navigationManager
+@inject NotificationService notificationService
+@inject PortfolioService portfolioService
+@inject FundsService fundsService
+
+<RadzenNotification />
+<div class="row" style="justify-content:center;padding-left:10%;padding-right:10%;padding-bottom: 5%;margin:auto">
+    <div class="col">
+        <br />
+        <div class="row" style="margin-left:0;">
+            <label style="font-size: 17px;">Add funds to portfolio</label>
+        </div>
+
+        <div class="row" sstyle="background-color:white;border-radius:5px;">
+            <RadzenTemplateForm Data="@fundInfo" Style="margin: 15px; width: 100%;background-color:white;border-radius:5px; }" Submit="@(async(FundInfo args) => {await Submit(args); })">
+                <RadzenFieldset Text="Investment Information">
+                    <div class="row" style="margin-left: 10px;margin-top:-20px;font-size:14px !important;margin-right:10px;">
+                        <RadzenLabel Text="Mutual Fund Name" Style="color:#48606c" />
+                        <RadzenDropDown TValue="string" Data="@AvailableFunds" Placeholder="Select a fund" TextProperty="FundName" ValueProperty="Id" @bind-Value="fundInfo.FundId"
+                                        style="width:100%;margin-top:10px;margin-bottom:15px;padding-top:6px;font-size:14px !important;">
+                        </RadzenDropDown>
+                    </div>
+
+                    <div class="container" style="padding-left: 10px;font-size:14px !important;padding-right:10px;margin-top:5px;">
+                        <div class="row">
+                            <div class="col">
+                                <RadzenLabel Text="Purchase Type" Style="color:#48606c" />
+                            </div>
+                            @*<div class="col">
+                                    <RadzenLabel Text="Investment Mode" Style="color:#48606c;" />
+                                </div>*@
+                            <div class="w-100"></div>
+                            <div class="col-6">
+                                <RadzenDropDown TValue="string" Placeholder="Select purchase type" Data="@FundPurchaseType" @bind-Value="fundInfo.PurchaseType" 
+                                                style="font-size:14px !important;padding-top:6px;padding-left:10px;margin-top:10px;width:100%;margin-bottom:15px;" />
+                            </div>
+                            @*<div class="col">
+                                <RadzenDropDown TValue="string" Placeholder="Select purchase type" Data="@FundPurchaseType" @bind-Value="fundInfo.PurchaseType"
+                                                style="font-size:14px !important;padding-top:6px;padding-left:10px;margin-top:10px;width:100%;margin-bottom:15px;" />
+                            </div>*@
+                            @*<div class="col">
+                                    <RadzenDropDown TValue="string" Placeholder="Select investment mode" Data="@FundInvestmentType" @bind-Value="fundInfo.InvestmentType"
+                                                    style="font-size:14px !important;padding-top:6px;padding-left:10px;margin-top:10px;width:100%;margin-bottom:15px;" />
+                                </div>*@
+                        </div>
+                    </div>
+
+                    @*<div class="container" style="padding-left: 10px;font-size:14px !important;padding-right:10px;">
+                            <div class="row">
+                                <div class="col">
+                                    <RadzenLabel Text="Plan Type" Style="color:#48606c" />
+                                </div>
+                                <div class="col">
+                                    <RadzenLabel Text="Fund Type" Style="color:#48606c;" />
+                                </div>
+                                <div class="w-100"></div>
+                                <div class="col">
+                                    <RadzenDropDown TValue="string" Placeholder="Select plan type" Data="@FundPlanType" @bind-Value="fundInfo.PlanType"
+                                                    style="font-size:14px !important;padding-top:6px;padding-left:10px;margin-top:10px;width:100%;" />
+                                </div>
+                                <div class="col">
+                                    <RadzenDropDown TValue="string" Placeholder="Select fund type" Data="@FundType" @bind-Value="fundInfo.FundType"
+                                                    style="font-size:14px !important;padding-top:6px;padding-left:10px;margin-top:10px;width:100%;" />
+                                </div>
+                            </div>
+                        </div>*@
+
+                    <div class="container" style="padding-left: 10px;font-size:14px !important;padding-right:10px;margin-top: 15px;">
+                        <div class="row">
+                            <div class="col">
+                                <RadzenLabel Text="Purchase Date" Style="color:#48606c" />
+                            </div>
+                            <div class="w-100"></div>
+                            <div class="col-6">
+                                <RadzenDatePicker TValue="DateTime" Name="PurchaseDate" YearRange="2019:2021" ShowTime="false" DateFormat="d"
+                                                  @ref="purchaseDatePicker" style="width:100%;margin-top:10px;margin-bottom:15px;" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container" style="padding-left: 10px;font-size:14px !important;padding-right:10px;margin-top:10px;">
+                        <div class="row">
+                            <div class="col">
+                                <RadzenLabel Text="Purchased Units" Style="color:#48606c" />
+                            </div>
+                            @*<div class="col">
+                                    <RadzenLabel Text="NAV" Style="color:#48606c" />
+                                </div>*@
+                            <div class="w-100"></div>
+                            <div class="col-6">
+                                <RadzenTextBox Name="NumberOfUnits" style="width:100%;margin-top:10px;margin-bottom:15px;" @bind-Value="fundInfo.NumberOfUnits" />
+                            </div>
+                             @*<div class="col">
+                                <RadzenTextBox Name="PurchaseAmount" style="width:100%;margin-top:10px;margin-bottom:15px;" @bind-Value="fundInfo.PurchaseAmount" />
+                            </div>*@
+                            @*<div class="col">
+                                    <RadzenTextBox Name="NAV" style="width:100%;margin-top:10px;" @bind-Value="fundInfo.NAV" />
+                                </div>*@
+                        </div>
+                    </div>
+                </RadzenFieldset>
+                <div class="row">
+                    <RadzenButton ButtonType="ButtonType.Submit" Text="Add Fund"
+                                  Style="margin-left:auto; margin-right:auto; margin-top:5px;background: #0479cc;margin-bottom: 20px;" />
+                </div>
+            </RadzenTemplateForm>
+
+        </div>
+
+        <div class="row" style="margin-left:0;">
+            <label style="margin-top: 20px;font-size: 17px;">Delete funds from portfolio</label>
+        </div>
+        <div class="row" style="padding-left: 0;padding-right:0;margin-left: auto;margin-right: auto;margin-top:15px;">
+            <div class="col" style="padding:0; width:100%;height: auto;">
+                <RadzenGrid @ref="portfolioGrid" AllowFiltering="false" AllowPaging="false" AllowSorting="true" Data="@Snapshot"
+                            TItem="PortfolioSnapshot" Responsive="false" Style="font-size: 14px;width:inherit" CellRender="@CellRender">
+                    <Columns>
+                        <RadzenGridColumn TextAlign="Radzen.TextAlign.Center" TItem="PortfolioSnapshot" Property="FundName" Title="Fund Name">
+                            <Template Context="data">
+                                <p style="white-space:pre-wrap;">@data.FundName</p>
+                            </Template>
+                        </RadzenGridColumn>
+                        <RadzenGridColumn TextAlign="Radzen.TextAlign.Center" TItem="PortfolioSnapshot" Property="Return" Title="Absolute Return">
+                            <Template Context="data">
+                                @String.Format("{0}%", data.Return)
+                            </Template>
+                        </RadzenGridColumn>
+                        <RadzenGridColumn TItem="PortfolioSnapshot" TextAlign="TextAlign.Center" Width="100px" Sortable="false"
+                                          Title="Delete Fund">
+                            <Template Context="data">
+                                <RadzenButton Style="background-color:white;" Size="Radzen.ButtonSize.Small" Click="@(args => DeleteFund(data))">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-trash handcursor" style="font-weight:bold"
+                                         viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                                    </svg>
+                                </RadzenButton>
+                            </Template>
+                        </RadzenGridColumn>
+                    </Columns>
+                </RadzenGrid>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    RadzenGrid<PortfolioSnapshot> portfolioGrid;
+    List<PortfolioSnapshot> Snapshot = new List<PortfolioSnapshot>();
+    List<Funds> AvailableFunds = new List<Funds>();
+    FundInfo fundInfo = new FundInfo();
+    RadzenDatePicker<DateTime> purchaseDatePicker;
+
+    List<string> FundPurchaseType = new List<string> { "LumpSum" };
+    //List<string> FundInvestmentType = new List<string> { "Dividend Reinvestment", "Growth" };
+    //List<string> FundPlanType = new List<string> { "Direct", "Regular" };
+    //List<string> FundType = new List<string> { "Debt", "Equity" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetFundsListAsync();
+        await GetPortfolioSnapshotAsync();
+    }
+
+    async Task GetPortfolioSnapshotAsync()
+    {
+        try
+        {
+            Snapshot = await portfolioService.GetPortfolioSnapshotAsync();
+
+            if (Snapshot == null)
+            {
+                ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "That didn't work :(", Detail = "Couldn't get top gainers details, please try again", Duration = 5000 });
+            }
+            else
+            {
+                await portfolioGrid.Reload();
+            }
+        }
+        catch (CustomException ex)
+        {
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "That didn't work :(", Detail = ex.Message, Duration = 5000 });
+        }
+        catch (Exception)
+        {
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Oops!", Detail = "App is lil unhappy, try refreshing the page once?", Duration = 5000 });
+        }
+    }
+
+    async Task GetFundsListAsync()
+    {
+        try
+        {
+            AvailableFunds = await fundsService.GetFundsListAsync();
+
+            if (AvailableFunds.Count == 0)
+            {
+                ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Something failed :(", Detail = "Couldn't get available funds list, please try reloading the page", Duration = 5000 });
+            }
+            
+        }
+        catch (CustomException ex)
+        {
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "That didn't work :(", Detail = ex.Message, Duration = 5000 });
+        }
+        catch (Exception)
+        {
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Oops!", Detail = "App is lil unhappy, try refreshing the page once?", Duration = 5000 });
+        }
+    }
+
+    async Task DeleteFund(PortfolioSnapshot portfolioSnapshot)
+    {
+        try
+        {
+            await portfolioService.RemoveFundFromFolio(portfolioSnapshot);
+            Snapshot.RemoveAll(x => x.FundId == portfolioSnapshot.FundId);
+            await portfolioGrid.Reload();
+            ShowNotification(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Success,
+                Summary = "That's Done!",
+                Detail = "Fund successfully removed from your portfolio",
+                Duration = 4000
+            });
+        }
+        catch (CustomException ex)
+        {
+            ShowNotification(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Summary = "That didn't work :(",
+                Detail = ex.Message,
+                Duration = 5000
+            });
+        }
+        catch (Exception)
+        {
+            ShowNotification(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Summary = "Oops!",
+                Detail = "App is lil unhappy, try refreshing the page once?",
+                Duration = 5000
+            });
+        }
+    }
+
+    async Task Submit(FundInfo newFundInfo)
+    {
+        try
+        {
+            newFundInfo.PurchaseDate = ((DateTime)purchaseDatePicker.Value).Date;
+            await portfolioService.AddFundToFolio(newFundInfo);
+            ShowNotification(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Success,
+                Summary = "That's Done!",
+                Detail = "Fund successfully added to your portfolio",
+                Duration = 4000
+            });
+        }
+        catch (CustomException ex)
+        {
+            ShowNotification(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Summary = "That didn't work :(",
+                Detail = ex.Message,
+                Duration = 5000
+            });
+        }
+        catch (Exception)
+        {
+            ShowNotification(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Summary = "Oops!",
+                Detail = "App is lil unhappy, try refreshing the page once?",
+                Duration = 5000
+            });
+        }
+    }
+
+    void CellRender(CellRenderEventArgs<PortfolioSnapshot> args)
+    {
+        args.Attributes.Add("style", @"background-color:white;text-align:center");
+    }
+
+    void ShowNotification(NotificationMessage message)
+    {
+        notificationService.Notify(message);
+    }
+
+}
