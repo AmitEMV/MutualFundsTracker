@@ -37,36 +37,8 @@
                                 <RadzenDropDown TValue="string" Placeholder="Select purchase type" Data="@FundPurchaseType" @bind-Value="fundInfo.PurchaseType" 
                                                 style="font-size:14px !important;padding-top:6px;padding-left:10px;margin-top:10px;width:100%;margin-bottom:15px;" />
                             </div>
-                            @*<div class="col">
-                                <RadzenDropDown TValue="string" Placeholder="Select purchase type" Data="@FundPurchaseType" @bind-Value="fundInfo.PurchaseType"
-                                                style="font-size:14px !important;padding-top:6px;padding-left:10px;margin-top:10px;width:100%;margin-bottom:15px;" />
-                            </div>*@
-                            @*<div class="col">
-                                    <RadzenDropDown TValue="string" Placeholder="Select investment mode" Data="@FundInvestmentType" @bind-Value="fundInfo.InvestmentType"
-                                                    style="font-size:14px !important;padding-top:6px;padding-left:10px;margin-top:10px;width:100%;margin-bottom:15px;" />
-                                </div>*@
                         </div>
                     </div>
-
-                    @*<div class="container" style="padding-left: 10px;font-size:14px !important;padding-right:10px;">
-                            <div class="row">
-                                <div class="col">
-                                    <RadzenLabel Text="Plan Type" Style="color:#48606c" />
-                                </div>
-                                <div class="col">
-                                    <RadzenLabel Text="Fund Type" Style="color:#48606c;" />
-                                </div>
-                                <div class="w-100"></div>
-                                <div class="col">
-                                    <RadzenDropDown TValue="string" Placeholder="Select plan type" Data="@FundPlanType" @bind-Value="fundInfo.PlanType"
-                                                    style="font-size:14px !important;padding-top:6px;padding-left:10px;margin-top:10px;width:100%;" />
-                                </div>
-                                <div class="col">
-                                    <RadzenDropDown TValue="string" Placeholder="Select fund type" Data="@FundType" @bind-Value="fundInfo.FundType"
-                                                    style="font-size:14px !important;padding-top:6px;padding-left:10px;margin-top:10px;width:100%;" />
-                                </div>
-                            </div>
-                        </div>*@
 
                     <div class="container containerstyle" style="margin-top: 15px;">
                         <div class="row">
@@ -86,19 +58,10 @@
                             <div class="col">
                                 <RadzenLabel Text="Purchased Units" Style="color:#48606c" />
                             </div>
-                            @*<div class="col">
-                                    <RadzenLabel Text="NAV" Style="color:#48606c" />
-                                </div>*@
                             <div class="w-100"></div>
                             <div class="col-6">
                                 <RadzenTextBox Name="NumberOfUnits" style="width:100%;margin-top:10px;margin-bottom:15px;" @bind-Value="fundInfo.NumberOfUnits" />
                             </div>
-                             @*<div class="col">
-                                <RadzenTextBox Name="PurchaseAmount" style="width:100%;margin-top:10px;margin-bottom:15px;" @bind-Value="fundInfo.PurchaseAmount" />
-                            </div>*@
-                            @*<div class="col">
-                                    <RadzenTextBox Name="NAV" style="width:100%;margin-top:10px;" @bind-Value="fundInfo.NAV" />
-                                </div>*@
                         </div>
                     </div>
                 </RadzenFieldset>
@@ -156,9 +119,6 @@
     RadzenDatePicker<DateTime> purchaseDatePicker;
 
     List<string> FundPurchaseType = new List<string> { "LumpSum" };
-    //List<string> FundInvestmentType = new List<string> { "Dividend Reinvestment", "Growth" };
-    //List<string> FundPlanType = new List<string> { "Direct", "Regular" };
-    //List<string> FundType = new List<string> { "Debt", "Equity" };
 
     protected override async Task OnInitializedAsync()
     {
