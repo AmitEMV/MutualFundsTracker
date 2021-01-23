@@ -174,7 +174,27 @@ app {
   border: none !important;
 }
 
-@media (max-width: 767.98px) {
+.firstdiv {
+    justify-content: center;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-bottom: 5%;
+    margin: auto;
+}
+
+.contentcenteralign {
+    padding-left: 0;
+    padding-right: 0;
+    margin: auto;
+}
+
+.containerstyle {
+    padding-left: 10px;
+    font-size: 14px !important;
+    padding-right: 10px;
+}
+
+@media (max-width: 1079.98px) {
     html {
         overflow-x: hidden !important;
     }
@@ -196,7 +216,7 @@ app {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1080px) {
     body {
         max-width: 62%;
         margin: auto !important;

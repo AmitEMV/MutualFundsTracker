@@ -10,12 +10,12 @@
 <h6>Hi, Amit</h6>
 <hr style="margin-top:0;" />
 <RadzenNotification />
-<div class="row" style="justify-content:center;padding-left:10%;padding-right:10%;padding-bottom: 5%;margin:auto">
+<div class="row firstdiv">
     <div class="col">
-        <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
+        <div class="row contentcenteralign">
             <div id="totalvaluediv" class="rounded summarybox" style="display: -webkit-flex; align-items: center; -webkit-box-pack: center; justify-content: center;width:100%">
                 <label style="margin-top:10px;font-size: 14px;">Total account value is <strong>@string.Format(CultureInfo.CreateSpecificCulture("en-IN"), "{0:c0}", TotalValue)</strong></label>
-                <RadzenButton Text="Details" ButtonStyle="ButtonStyle.Info" Click="NavigateToPortfolioPage"
+                <RadzenButton Text="Details" ButtonStyle="ButtonStyle.Info" Click="NavigateToPortfolioPage" aria-label="Details"
                               Style="margin-left: 20px;background: #0479cc; margin-top: 5px;" />
             </div>
         </div>
@@ -25,7 +25,7 @@
             <label style="margin-top: 10px; font-size: 17px;">Account value trend for the last 12 months</label>
         </div>
         <br />
-        <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
+        <div class="row contentcenteralign">
             <div class="col rounded" style="font-size: 12px; width:100%;height: auto;background-color: white;">
                 <RadzenChart @ref="areaChart" Style="width: 100%; padding: 0px; margin: 0px;">
                     <RadzenAreaSeries Smooth=true Data="@PortfolioValueTrend" CategoryProperty="Date" ValueProperty="CurrentValue"
@@ -33,7 +33,7 @@
                     <RadzenAreaSeries Smooth=true Data="@PortfolioValueTrend" CategoryProperty="Date" Title="Invested Amount"
                                       LineType="LineType.Dashed" ValueProperty="InvestedValue">
                     </RadzenAreaSeries>
-                    <RadzenCategoryAxis FormatString="{0:dd/MMM}" >
+                    <RadzenCategoryAxis FormatString="{0:dd/MMM}">
                         <RadzenGridLines Visible="true" />
                     </RadzenCategoryAxis>
                     <RadzenValueAxis Formatter="@FormatAsINR">
@@ -49,7 +49,7 @@
             <label style="margin-top: 10px;font-size: 17px;">Top gainers for the last 12 months</label>
         </div>
         <br />
-        <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
+        <div class="row contentcenteralign">
             <div class="col" style="padding:0; width:100%;height: auto;">
                 <RadzenGrid @ref="gainersFundsGrid" AllowFiltering="false" AllowPaging="false" AllowSorting="true" Data="@GainersFundsData"
                             TItem="FundPerformance" Responsive="false" Style="font-size: 14px;width:inherit" CellRender="@CellRender">
@@ -70,7 +70,7 @@
             <label style="margin-top: 10px;font-size: 17px;">Top losers for the last 12 months</label>
         </div>
         <br />
-        <div class="row" style="padding-left:0;padding-right:0;margin:auto;">
+        <div class="row contentcenteralign">
             <div class="col" style="padding:0; width: 100%; height: auto;">
                 <RadzenGrid @ref="losersFundsGrid" AllowFiltering="false" AllowPaging="false" AllowSorting="true" Data="@LosersFundsData"
                             TItem="FundPerformance" Responsive="false" Style="font-size: 14px;width:inherit" CellRender="@CellRender">
