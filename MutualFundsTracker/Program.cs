@@ -9,8 +9,8 @@ namespace MutualFundsTracker
 {
     public class Program
     {
-        const string API_URL = "https://localhost:44322";
-        const string AUTOCOMPLETE_API_URL = "https://localhost:44394";
+        const string API_URL = "http://www.myportfoliotracker.com";
+        //const string AUTOCOMPLETE_API_URL = "https://localhost:44394";
 
         public static async Task Main(string[] args)
         {
@@ -29,10 +29,10 @@ namespace MutualFundsTracker
                 return new PortfolioService(API_URL);
             });
 
-            builder.Services.AddScoped<AutoCompleteService>(s =>
-            {
-                return new AutoCompleteService(AUTOCOMPLETE_API_URL);
-            });
+            //builder.Services.AddScoped<AutoCompleteService>(s =>
+            //{
+            //    return new AutoCompleteService(AUTOCOMPLETE_API_URL);
+            //});
 
             builder.Services.AddScoped<Radzen.NotificationService>();
 

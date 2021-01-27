@@ -8,15 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="SyncfusionLicenseRegister.bat" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.0" PrivateAssets="all" />
     <PackageReference Include="Radzen.Blazor" Version="2.18.8" />
-    <PackageReference Include="Syncfusion.Blazor" Version="18.4.0.31" />
     <PackageReference Include="System.Net.Http.Json" Version="3.2.0" />
   </ItemGroup>
 
