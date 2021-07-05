@@ -5,7 +5,7 @@ There are no dependencies to run the app itself locally but to fetch the data, i
 
 Some screenshots from the web app 
 
-[Dashboard page](https://github.com/AmitEMV/MutualFundsTracker/blob/master/Screenshots/Page%201.png)
+![Dashboard page](https://github.com/AmitEMV/MutualFundsTracker/blob/master/Screenshots/Page%201.png)
 
-[Manage Portfolio page](https://github.com/AmitEMV/MutualFundsTracker/blob/master/Screenshots/Page%203.png)
+![Manage Portfolio page](https://github.com/AmitEMV/MutualFundsTracker/blob/master/Screenshots/Page%203.png)
 
